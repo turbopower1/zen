@@ -69,29 +69,41 @@ case $choice in
         echo -e "${BLUE}Let's get started, follow the instructions ...${NC}"
         read -p "Enter validator name (example: HiWorld): " VALIDATOR_NAME
 
-        # Node installation
-        docker run \
-  -d \
-  --name zenchain \
-  -p 9955:9944 \
-  -v ./chain-data:/chain-data \
-  --user $(id -u):$(id -g) \
-  ghcr.io/zenchain-protocol/zenchain-testnet:v1.1.2 \
-  ./usr/bin/zenchain-node \
-  --base-path=/chain-data \
-  --rpc-cors=all \
-  --rpc-methods=Unsafe \
-  --unsafe-rpc-external \
-  --validator \
-  --name=${VALIDATOR_NAME} \
-  --bootnodes=/dns4/node-7274523776613056512-0.p2p.onfinality.io/tcp/24453/ws/p2p/12D3KooWDLh2E27VUrXRBvCP6YMz7PzZCVK3Kpwv42Sj1MHJJvN6 \
-  --chain=zenchain_testnet
+               
+               
+        # Checking for conflicts with the container name
+        echo -e "${BLUE}Checking for existing container with the name 'zenchain'...${NC}"
+        if docker ps -a --format '{{.Names}}' | grep -Eq "^zenchain\$"; then
+            echo -e "${YELLOW}Container with the name 'zenchain' already exists. Removing it...${NC}"
+            docker stop zenchain && docker rm zenchain
+            echo -e "${GREEN}Existing container removed successfully.${NC}"
+        fi
 
+        # Restarting the node installation
+        echo -e "${BLUE}Starting the installation process again...${NC}"
+        docker run \
+        -d \
+        --name zenchain \
+        -p 9955:9944 \
+        -v ./chain-data:/chain-data \
+        --user $(id -u):$(id -g) \
+        ghcr.io/zenchain-protocol/zenchain-testnet:v1.1.2 \
+        ./usr/bin/zenchain-node \
+        --base-path=/chain-data \
+        --rpc-cors=all \
+        --rpc-methods=Unsafe \
+        --unsafe-rpc-external \
+        --validator \
+        --name=${VALIDATOR_NAME} \
+        --bootnodes=/dns4/node-7274523776613056512-0.p2p.onfinality.io/tcp/24453/ws/p2p/12D3KooWDLh2E27VUrXRBvCP6YMz7PzZCVK3Kpwv42Sj1MHJJvN6 \
+        --chain=zenchain_testnet
 
         # Final Conclusion
-        echo -e "${GREEN}The installation is complete and the node is running! After installation, get the session key by restarting the script with the command (./Zen-chain.sh) ${NC}"
-               
-        
+        echo -e "${GREEN}The installation is complete and the node is running! After installation, get the session key by restarting the script with the command (./Zen-chain.sh)${NC}"
+        echo -e "${PURPLE}-----------------------------------------------------------------------${NC}"
+        echo -e "${CYAN}Discord-longlifemmm${NC}"
+        echo -e "${CYAN}Telegram-https://t.me/swapapparat${NC}"
+        echo -e "${PURPLE}-----------------------------------------------------------------------${NC}"
                ;;
     
     2)
@@ -107,10 +119,9 @@ case $choice in
 
         # Final conclusion
         echo -e "${PURPLE}-----------------------------------------------------------------------${NC}"
-        echo -e "${YELLOW}Command to check logs:${NC}" 
-        echo "docker logs -f zenchain"
+        echo -e "${CYAN}Discord-longlifemmm${NC}"
+        echo -e "${CYAN}Telegram-https://t.me/swapapparat${NC}"
         echo -e "${PURPLE}-----------------------------------------------------------------------${NC}"
-        echo -e "${CYAN}Telegram https://t.me/swapapparat${NC}"
         ;;
     4) 
         echo -e "${BLUE}Create a session key ...${NC}"    
